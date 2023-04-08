@@ -1,13 +1,13 @@
 import json
-from typing import List, Tuple
+from typing import List
 
 from enigma import Enigma
 
 
 def decypher(loops: List[List[int]]):
+    # We assume fixed ring orders 'DES'
     possibilities = []
     for rotor_order in [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]:
-    # for rotor_order in [[2, 3, 1]]:
         print("Rotor order: %d-%d-%d" % tuple(rotor_order), end='')
         print(", %d possibilities found" % len(possibilities))
         for i in range(26):
