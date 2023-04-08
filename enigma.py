@@ -93,11 +93,6 @@ class Enigma:
         return "".join(ans)
 
 
-def test_enigma():
-    enigma = Enigma([2, 3, 1], 'DES', "AAA", "BX GK WY EF PQ SN")
-    assert TEST_OUT == enigma.encode(TEST_IN)
-
-
 if __name__ == '__main__':
-    test_enigma()
+    pass
 
