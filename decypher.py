@@ -50,20 +50,6 @@ def make_catalogue():
         json.dump(catalogue, fo)
 
 
-def tst_catalogue():
-    enigma = Enigma([2, 3, 1], 'DES', "AAA", "")
-    pattern = []
-    for c in range(3):
-        pattern.append([-1, ] * 26)
-    for c in range(26):
-        output = enigma.encode(chr(c + ord('A')) * 6)
-        enigma.reset()
-        for t in range(3):
-            pattern[t][ord(output[t]) - ord('A')] = output[t + 3]
-    for t in range(3):
-        print(pattern[t])
-
-
 def decypher(catalogue: dict, initials: List[str]):
     possibilities = []
 
@@ -71,7 +57,6 @@ def decypher(catalogue: dict, initials: List[str]):
     keys = []
     for t in range(3):
         loops = get_loop("".join(initials[t]))
-        print(loops)
         len_loops = [len(loop) for loop in loops]
         len_loops.sort()
         keys.append("-".join([str(len_loop) for len_loop in len_loops]))
