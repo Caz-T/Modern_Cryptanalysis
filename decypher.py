@@ -1,10 +1,11 @@
 import json
+from typing import List
 
 from enigma import Enigma
 from utils import get_loop
 
 
-def decypher():
+def make_catalogue():
     # We assume fixed ring orders 'DES'
     catalogue = {}
     for rotor_order in [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]:
@@ -16,7 +17,9 @@ def decypher():
                 for k in range(26):
                     init_pos = chr(ord('A') + i) + chr(ord('A') + j) + chr(ord('A') + k)
                     enigma = Enigma(rotor_order, 'DES', init_pos, "")
-                    pattern = [[-1, ] * 26] * 3
+                    pattern = []
+                    for c in range(3):
+                        pattern.append([-1, ] * 26)
                     for c in range(26):
                         output = enigma.encode(chr(c + ord('A')) * 6)
                         enigma.reset()
@@ -47,5 +50,47 @@ def decypher():
         json.dump(catalogue, fo)
 
 
+def tst_catalogue():
+    enigma = Enigma([2, 3, 1], 'DES', "AAA", "")
+    pattern = []
+    for c in range(3):
+        pattern.append([-1, ] * 26)
+    for c in range(26):
+        output = enigma.encode(chr(c + ord('A')) * 6)
+        enigma.reset()
+        for t in range(3):
+            pattern[t][ord(output[t]) - ord('A')] = output[t + 3]
+    for t in range(3):
+        print(pattern[t])
+
+
+def decypher(catalogue: dict, initials: List[str]):
+    possibilities = []
+
+    # calculate loop length patterns
+    keys = []
+    for t in range(3):
+        loops = get_loop("".join(initials[t]))
+        print(loops)
+        len_loops = [len(loop) for loop in loops]
+        len_loops.sort()
+        keys.append("-".join([str(len_loop) for len_loop in len_loops]))
+
+    for rotor_order in [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]:
+        try:
+            possible_keys = catalogue["-".join(str(ro) for ro in rotor_order)][keys[0]][keys[1]][keys[2]]
+            possibilities.append((rotor_order, possible_keys))
+        except KeyError:
+            pass
+    return possibilities
+
+
 if __name__ == '__main__':
-    decypher()
+    with open('catalogue.json', mode='r', encoding='utf-8') as fi:
+        catalogue = json.load(fi)
+    print(decypher(catalogue, [
+        "ELCONWDIAPKSZHFBQTJYRGVXMU",
+        "MRWJFDVSQEXUCONHBIPLTGAYZK",
+        "WADFRPOLNTVCHMYBJQIGEUSKZX",
+    ]))
+

@@ -94,5 +94,9 @@ class Enigma:
 
 
 if __name__ == '__main__':
-    pass
+    enigma = Enigma([2, 3, 1], 'DES', 'AAA', 'BX GK WY EF PQ SN')
+    while True:
+        enigma.reset()
+        q = input()
+        print(enigma.encode(q))
 
