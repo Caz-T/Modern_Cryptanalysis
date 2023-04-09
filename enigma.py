@@ -49,7 +49,7 @@ class Enigma:
                 self._rotor_pos[0] += 1
                 self._rotor_pos[0] %= 26
 
-    def encode(self, raw: str):
+    def encrypt(self, raw: str):
         ans = []
         for c in raw:
             c = ord(c) - ord('A')
@@ -98,5 +98,5 @@ if __name__ == '__main__':
     while True:
         enigma.reset()
         q = input()
-        print(enigma.encode(q))
+        print(enigma.encrypt(q))
 

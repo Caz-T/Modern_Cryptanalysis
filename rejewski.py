@@ -42,7 +42,7 @@ def make_catalogue():
                     for c in range(3):
                         pattern.append([-1, ] * 26)
                     for c in range(26):
-                        output = enigma.encode(chr(c + ord('A')) * 6)
+                        output = enigma.encrypt(chr(c + ord('A')) * 6)
                         enigma.reset()
                         for t in range(3):
                             pattern[t][ord(output[t]) - ord('A')] = ord(output[t + 3]) - ord('A')

@@ -26,7 +26,7 @@ def decypher(loops: List[List[int]]):
                             prev_fin = ch
                             for cnt in loop:
                                 enigma.reset()
-                                prev_fin = enigma.encode((cnt + 1) * prev_fin)[-1]
+                                prev_fin = enigma.encrypt((cnt + 1) * prev_fin)[-1]
                             if prev_fin != ch:
                                 flag = False
                                 break
