@@ -171,12 +171,11 @@ def assignment_1_21_d():
 
 
 def assignment_1_25():
-    encrypted = "LMQETXYEAGTXCTUIEWNCTXLZEWUAISPZYUVAPEWLMGQWYAXFTCGMSQCADAGTXLMDXNXSNPJQSYVAPRIQSMHNOCVAXFV"
+    encrypted = "LMQETXYEAGTXCTUIEWNCTXLZEWUAISPZYVAPEWLMGQWYAXFTCJMSQCADAGTXLMDXNXSNPJQSYVAPRIQSMHNOCVAXFV"
     enc_grouped = [np.mat([ord(encrypted[2 * i]) - ord('A'),
                            ord(encrypted[2 * i + 1]) - ord('A')]
                           ) for i in range(int(len(encrypted) / 2))
                    ]
-
     cnt = {}
     for i in range(len(encrypted) - 1):
         cnt[encrypted[i: i + 2]] = cnt.get(encrypted[i: i + 2], 0) + 1
@@ -188,29 +187,34 @@ def assignment_1_25():
         [ord(c) - ord('A') for c in key_freqs[0][0]],
         [ord(c) - ord('A') for c in key_freqs[1][0]],
     ])
+    print(crypto_mat)
+    # the following line is computed by hand, since crypto_mat = [[19, 23], [11, 12]] is fixed
+    crypto_mat_inv = np.mat([[12, 3], [15, 19]])
 
-    hi_freqs = ['TH', 'HE', 'IN', 'ER', 'AN', 'RE', 'DE', 'ON', 'ES', 'ST', 'EN', 'AT', 'TO', 'NT', 'HA', 'ND',
-                'OU', 'EA', 'NG', 'AS', 'OR', 'TI', 'IS', 'ET', 'IT', 'AR', 'TE', 'SE', 'HI', 'OF']
-    for (c1, c2) in itertools.combinations(hi_freqs, 2):
+    hi_freqs = ['TH', 'HE', 'IN', 'ER']
+    # hi_freqs = ['TH', 'HE', 'IN', 'ER', 'AN', 'RE', 'DE', 'ON', 'ES', 'ST', 'EN', 'AT', 'TO', 'NT', 'HA',
+    #             'ND', 'OU', 'EA', 'NG', 'AS', 'OR', 'TI', 'IS', 'ET', 'IT', 'AR', 'TE', 'SE', 'HI', 'OF']
+    for c1, c2 in itertools.product(hi_freqs, hi_freqs):
+        if c1 == c2:
+            continue
         origin_mat = np.mat([
             [ord(c) - ord('A') for c in c1],
             [ord(c) - ord('A') for c in c2],
         ])
-        try:
-            k = np.matmul(np.linalg.inv(origin_mat), crypto_mat)
-        except numpy.linalg.LinAlgError:
-            continue
+        # Actually k is K^{-1} in textbook
+        k = np.matmul(crypto_mat_inv, origin_mat)
+        for i in range(2):
+            for j in range(2):
+                k[i, j] %= 26
         res = ''
         for group in enc_grouped:
             resmat = np.matmul(group, k)
-            try:
-                res += chr(resmat[0][0] + ord('A'))
-                res += chr(resmat[0][1] + ord('A'))
-            except TypeError:
-                continue
+            for j in range(2):
+                resmat[0, j] %= 26
+            res += chr(resmat[0, 0] + ord('A'))
+            res += chr(resmat[0, 1] + ord('A'))
         if len(res):
-            print(res)
-            input()
+            print("%s %s: %s" % (c1, c2, res))
 
 
 if __name__ == '__main__':
