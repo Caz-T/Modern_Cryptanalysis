@@ -1,3 +1,8 @@
+import itertools
+
+import numpy as np
+import numpy.linalg
+
 LETTER_FREQ = [
     .082, .015, .028, .043, .127, .022, .020, .061, .070, .002, .008, .040, .024,
     .067, .075, .019, .001, .060, .063, .091, .028, .010, .023, .001, .020, .001,
@@ -165,5 +170,48 @@ def assignment_1_21_d():
     print(product)
 
 
+def assignment_1_25():
+    encrypted = "LMQETXYEAGTXCTUIEWNCTXLZEWUAISPZYUVAPEWLMGQWYAXFTCGMSQCADAGTXLMDXNXSNPJQSYVAPRIQSMHNOCVAXFV"
+    enc_grouped = [np.mat([ord(encrypted[2 * i]) - ord('A'),
+                           ord(encrypted[2 * i + 1]) - ord('A')]
+                          ) for i in range(int(len(encrypted) / 2))
+                   ]
+
+    cnt = {}
+    for i in range(len(encrypted) - 1):
+        cnt[encrypted[i: i + 2]] = cnt.get(encrypted[i: i + 2], 0) + 1
+    key_freqs = []
+    for key in cnt:
+        key_freqs.append((key, cnt[key]))
+    key_freqs.sort(key=lambda t: t[1], reverse=True)
+    crypto_mat = np.mat([
+        [ord(c) - ord('A') for c in key_freqs[0][0]],
+        [ord(c) - ord('A') for c in key_freqs[1][0]],
+    ])
+
+    hi_freqs = ['TH', 'HE', 'IN', 'ER', 'AN', 'RE', 'DE', 'ON', 'ES', 'ST', 'EN', 'AT', 'TO', 'NT', 'HA', 'ND',
+                'OU', 'EA', 'NG', 'AS', 'OR', 'TI', 'IS', 'ET', 'IT', 'AR', 'TE', 'SE', 'HI', 'OF']
+    for (c1, c2) in itertools.combinations(hi_freqs, 2):
+        origin_mat = np.mat([
+            [ord(c) - ord('A') for c in c1],
+            [ord(c) - ord('A') for c in c2],
+        ])
+        try:
+            k = np.matmul(np.linalg.inv(origin_mat), crypto_mat)
+        except numpy.linalg.LinAlgError:
+            continue
+        res = ''
+        for group in enc_grouped:
+            resmat = np.matmul(group, k)
+            try:
+                res += chr(resmat[0][0] + ord('A'))
+                res += chr(resmat[0][1] + ord('A'))
+            except TypeError:
+                continue
+        if len(res):
+            print(res)
+            input()
+
+
 if __name__ == '__main__':
-    assignment_1_21_d()
+    assignment_1_25()
