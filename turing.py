@@ -1,4 +1,5 @@
 import json
+from time import time
 from typing import List
 
 from enigma import Enigma
@@ -38,15 +39,21 @@ def decypher(loops: List[List[int]]):
 
 
 if __name__ == '__main__':
+    t0 = time()
     res = decypher([
+        # indexes of the cycles.
         [7, 8, 1, 16, 6],
         [7, 11, 4],
         [7, 8, 9, 10, 12],
         [7, 8, 1, 2, 3, 16, 6],
         [7, 8, 9, 0, 1, 16, 6],
     ])
-    with open('turing.json', mode='w', encoding='utf-8') as fo:
-        json.dump(res, fo)
+    print("Decryption took %.4f seconds" % (time() - t0))
+    print("\nAll possibilities: ")
+    for (rotor_order, init_pos, ch) in res:
+        print("Rotor order: %s, initial position: %s, cycle root swapped with letter %s" %
+              ("-".join([str(c) for c in rotor_order]), init_pos, ch)
+              )
 
 
 

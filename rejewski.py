@@ -1,4 +1,5 @@
 import json
+from time import time
 from typing import List
 
 from enigma import Enigma
@@ -92,11 +93,26 @@ def decypher(catalogue: dict, initials: List[str]):
 
 
 if __name__ == '__main__':
+    # uncomment these lines if catalogue is yet to be made
+    # t0 = time()
+    # print("Making catalogue")
+    # make_catalogue()
+    # print("Catalogue made in %.4f seconds" % (time() - t0))
     with open('catalogue.json', mode='r', encoding='utf-8') as fi:
         catalogue = json.load(fi)
-    print(decypher(catalogue, [
+    possibilities = decypher(catalogue, [
+        # change the following lines to decypher another pattern
         "ELCONWDIAPKSZHFBQTJYRGVXMU",
         "MRWJFDVSQEXUCONHBIPLTGAYZK",
         "WADFRPOLNTVCHMYBJQIGEUSKZX",
-    ]))
-
+    ])
+    print("All possibilities:")
+    for code in possibilities:
+        for init in code[1]:
+            enigma = Enigma(code[0], 'DES', init, "")
+            print("%s (Rotor order %s, initial position %s)" %
+                  (
+                      enigma.encrypt("NHVQOBPZNOGPQD"),  # code for ARRIVEINBERLIN, L-R swapped
+                      "-".join([str(c) for c in code[0]]),
+                      "-".join(init)
+                  ))
