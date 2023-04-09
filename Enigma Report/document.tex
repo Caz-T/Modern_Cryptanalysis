@@ -1,0 +1,50 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[fontset=macnew]{ctex}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{floatrow}
+\usepackage{stmaryrd}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{multicol}
+
+\setlist{noitemsep}
+
+\title{Enigma破译\ 实验报告}
+\author{陈庆之 2021011819}
+
+\begin{document}
+	
+	\maketitle
+	
+	\section{算法原理}
+	\subsection{Enigma原理}
+	
+	\subsection{Rejewski的方法}
+	
+	\subsection{Turing的方法}
+	
+	\section{实际攻击样例}
+	
+	\subsection{Rejewski的方法}
+	
+	
+	
+	\subsection{Turing的方法}
+	
+	\section{代码结构}
+	
+	本次实验的代码部分包括以下文件：
+	\begin{enumerate}
+		\item \texttt{enigma.py}: 实现了支持选择转子顺序、插线板、转子设置、初始值设置的Enigma I密码机。密码机会存储最开始的设置，并支持\texttt{reset()}方法。密码机的转子数量、可用转子排列等可以被简单地扩展。
+		
+		\item \texttt{rejewski.py}: 实现了Rejewski的破解方法。其中的\texttt{make\_catalogue()}可以在当前目录下生成\texttt{catalogue.json}（相当于波兰人\textbf{建立目录}的过程），之后使用\texttt{decypher(...)}方法可以对特定的重复密钥序列进行破解。
+		
+		\item \texttt{turing.py}: 实现了Turing的破解方法。使用其中的\texttt{decypher(...)}方法并传入已发现的环，方法会返回所有可能的转子序列和初始位置。
+	\end{enumerate}
+	
+	本次实验没有使用第三方包，只需\texttt{python3}即可。
+	
+\end{document}
