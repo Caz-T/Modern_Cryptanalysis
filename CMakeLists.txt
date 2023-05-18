@@ -3,4 +3,4 @@ project(aes128_cbc)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(aes128_cbc main.cpp)
+add_executable(aes128_cbc main.cpp block.cpp aes.cpp)

@@ -6,6 +6,7 @@
 #define AES128_CBC_AES_H
 
 #include <string>
+#include "block.h"
 using namespace std;
 
 class aes {
