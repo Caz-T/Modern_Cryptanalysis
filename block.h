@@ -14,6 +14,7 @@ public:
     explicit block(const unsigned char*);
 
     void step_through(const block&);
+    void xor_with(const block& another);
 };
 
 
