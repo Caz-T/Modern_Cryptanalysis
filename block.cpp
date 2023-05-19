@@ -100,8 +100,8 @@ void block::inv_mix_columns() {
 }
 
 void block::step_back(const block* round_key, bool inv_mix_col) {
-    inv_substitute_bytes();
     inv_shift_rows();
+    inv_substitute_bytes();
     xor_with(round_key);
     if (inv_mix_col) inv_mix_columns();
 }

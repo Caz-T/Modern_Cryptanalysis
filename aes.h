@@ -13,7 +13,7 @@ using namespace std;
 class aes {
 public:
     explicit aes(unsigned char*);
-    unsigned char* encrypt(string&, unsigned char**);
+    unsigned char* encrypt(string&, unsigned char*);
     string decrypt(unsigned char*, unsigned long long, unsigned char*);
 
 private:

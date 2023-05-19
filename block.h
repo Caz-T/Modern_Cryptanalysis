@@ -18,7 +18,7 @@ public:
     void xor_with(const block*);
 
 
-private:
+// private:
     void substitute_bytes();
     void shift_rows();
     void mix_columns();

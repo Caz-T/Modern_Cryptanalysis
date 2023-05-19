@@ -3,7 +3,6 @@
 //
 
 #include <vector>
-#include <random>
 #include "aes.h"
 #include "constants.h"
 using namespace std;
@@ -30,19 +29,10 @@ aes::aes(unsigned char* ck) {
     }
 }
 
-unsigned char* aes::encrypt(string& original_text, unsigned char** iv) {
+unsigned char* aes::encrypt(string& original_text, unsigned char* iv) {
     // group by 16 bytes
     vector<block*> ans;
     unsigned long long const len = original_text.length();
-    // generate initial vector, using CBC
-    // cited from https://stackoverflow.com/questions/7560114/random-number-c-in-some-range
-    if (*iv == nullptr) {
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_int_distribution<> distr(0, 255);
-        *iv = new unsigned char[16];
-        for (int i = 0; i < 16; i++) (*iv)[i] = (unsigned char)distr(gen);
-    }
 
     for (unsigned long long i = 0; 16 * i < len; i++) {
         auto transcripted = new unsigned char[16];
@@ -53,7 +43,7 @@ unsigned char* aes::encrypt(string& original_text, unsigned char** iv) {
 
         // CBC overhead
         if (i == 0) {
-            auto iv_block = new block(*iv);
+            auto iv_block = new block(iv);
             curr_state->xor_with(iv_block);
             delete iv_block;
         } else curr_state->xor_with(ans.back());
@@ -89,7 +79,11 @@ string aes::decrypt(unsigned char* coded_text, unsigned long long len, unsigned 
             auto iv_block = new block(iv);
             curr_state->xor_with(iv_block);
             delete iv_block;
-        } else curr_state->xor_with(ans.back());
+        } else {
+            auto temp_block = new block(&coded_text[16 * i - 16]);
+            curr_state->xor_with(temp_block);
+            delete temp_block;
+        }
 
         // save to vector `ans`
         ans.emplace_back(curr_state);
