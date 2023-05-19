@@ -12,8 +12,13 @@ using namespace std;
 
 class aes {
 public:
-    static unsigned char* encrypt(string&, unsigned char**);
-    static string decrypt(unsigned char*);
+    explicit aes(unsigned char*);
+    unsigned char* encrypt(string&, unsigned char**);
+    string decrypt(unsigned char*, unsigned long long, unsigned char*);
+
+private:
+    unsigned char* cypher_key;
+    block* round_keys[11];
 };
 
 
