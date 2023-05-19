@@ -16,8 +16,8 @@ aes::aes(unsigned char* ck) {
     for (int j = 4; j < 44; j++) {
         unsigned int temp = w[j - 1];
         if (j % 4 == 0) {
-            temp = S_BOX[temp >> 24] + (S_BOX[temp & 0xFF] << 8)
-                   + (S_BOX[(temp >> 8) & 0xFF] << 16) + (S_BOX[(temp >> 16) & 0xFF] << 24);
+            temp = (unsigned int)S_BOX[temp >> 24] + (unsigned int)(S_BOX[temp & 0xFF] << 8)
+                   + (unsigned int)(S_BOX[(temp >> 8) & 0xFF] << 16) + (unsigned int)(S_BOX[(temp >> 16) & 0xFF] << 24);
             temp = temp ^ RCON[(int)(j / 4)];
         }
         w[j] = w[j - 4] ^ temp;
