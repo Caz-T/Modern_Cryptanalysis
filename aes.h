@@ -7,16 +7,13 @@
 
 #include <string>
 #include "block.h"
+#include "constants.h"
 using namespace std;
 
 class aes {
 public:
-    explicit aes(string key);
-    string cypher(string original_text);
-    string decypher(string coded_text);
-
-private:
-    string key;
+    static unsigned char* encrypt(string&, unsigned char**);
+    static string decrypt(unsigned char*);
 };
 
 
