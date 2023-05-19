@@ -38,7 +38,7 @@ unsigned char* aes::encrypt(string& original_text, unsigned char* iv) {
         auto transcripted = new unsigned char[16];
         for (unsigned long long j = 0; j < 16 and j < len; j++) transcripted[j] = original_text[16 * i + j];
         // padding
-        for (unsigned long long j = len; j < 16 * (i + 1); j++) transcripted[j] = 0;
+        for (unsigned long long j = len; j < 16 * (i + 1); j++) transcripted[j % 16] = 0;
         auto curr_state = new block(transcripted);
 
         // CBC overhead

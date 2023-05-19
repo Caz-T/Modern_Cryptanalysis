@@ -15,12 +15,8 @@ const unsigned char TEST_1[16] = {
 };
 
 int main() {
-    unsigned char* custom_key = new unsigned char[16];
-    string tmpstr;
-    cout << "Type in your custom key, or type 'default' to apply default: ";
-    cin >> tmpstr;
-    if (tmpstr == "default") for (int i = 0; i < 16; i++) custom_key[i] = STD_KEY[i];
-    else for (int i = 0; i < 16; i++) custom_key[i] = (unsigned char)tmpstr[i];
+    auto custom_key = new unsigned char[16];
+    for (int i = 0; i < 16; i++) custom_key[i] = STD_KEY[i];
     auto machine = new aes(custom_key);
 
     cout << "Choose one: [d]ecrypt / [e]ncrypt :";
@@ -61,14 +57,14 @@ int main() {
 
         ofstream fo;
         fo.open("encrypt_result.txt");
-        for (auto i = 0; i < len; i++) fo << hex << setfill('0') << setw(2) << (unsigned short)result[i] << ' ';
+        for (auto i = 0; i < (1 + (unsigned long long)(len / 16)) * 16; i++) fo << hex << setfill('0') << setw(2) << (unsigned short)result[i] << ' ';
         fo.close();
     } else if (c == 'd') {
         ifstream fi;
         fi.open("to_decrypt.txt");
         unsigned long long len = 0;
         unsigned short t;
-        auto to_decrypt = new unsigned char [1073741824];
+        auto to_decrypt = new unsigned char [1073741823];
         while (fi >> hex >> t) {
             to_decrypt[len] = t;
             len += 1;
