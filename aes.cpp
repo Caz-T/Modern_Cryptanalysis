@@ -9,7 +9,6 @@
 using namespace std;
 
 aes::aes(unsigned char* ck) {
-    cypher_key = ck;
     round_keys[0] = new block(ck);
     auto w = new unsigned int[44];  // in slides' fashion
     for (int j = 0; j < 4; j++) w[j] = (ck[4 * j] << 24) + (ck[4 * j + 1] << 16) + (ck[4 * j + 2] << 8) + (ck[4 * j + 3]);

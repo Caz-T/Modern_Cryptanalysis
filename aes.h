@@ -17,7 +17,6 @@ public:
     string decrypt(unsigned char*, unsigned long long, unsigned char*);
 
 private:
-    unsigned char* cypher_key;
     block* round_keys[11];
 };
 
