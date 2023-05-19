@@ -14,7 +14,7 @@ block::block() {
 block::block(const unsigned char * ori) {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
-            bytes[i][j] = ori[i * 4 + j];
+            bytes[i][j] = ori[j * 4 + i];
 }
 
 void block::xor_with(const block* another) {
@@ -51,7 +51,7 @@ void block::mix_columns() {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             for (int k = 0; k < 4; k++)
-                oldbyte->bytes[i][j] += GALOIS_TABLE[MIX_MATRIX[i][k]][bytes[k][j]];
+                oldbyte->bytes[i][j] ^= GALOIS_TABLE[MIX_MATRIX[i][k]][bytes[k][j]];
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             bytes[i][j] = oldbyte->bytes[i][j];
@@ -92,7 +92,7 @@ void block::inv_mix_columns() {
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             for (int k = 0; k < 4; k++)
-                oldbyte->bytes[i][j] += GALOIS_TABLE[INVERSE_MIX_MATRIX[i][k]][bytes[k][j]];
+                oldbyte->bytes[i][j] ^= GALOIS_TABLE[INVERSE_MIX_MATRIX[i][k]][bytes[k][j]];
     for (int i = 0; i < 4; i++)
         for (int j = 0; j < 4; j++)
             bytes[i][j] = oldbyte->bytes[i][j];

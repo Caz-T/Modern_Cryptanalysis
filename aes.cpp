@@ -34,7 +34,7 @@ aes::aes(unsigned char* ck) {
 unsigned char* aes::encrypt(string& original_text, unsigned char** iv) {
     // group by 16 bytes
     vector<block*> ans;
-    unsigned long long len = original_text.length();
+    unsigned long long const len = original_text.length();
     // generate initial vector, using CBC
     // cited from https://stackoverflow.com/questions/7560114/random-number-c-in-some-range
     if (*iv == nullptr) {
@@ -60,7 +60,7 @@ unsigned char* aes::encrypt(string& original_text, unsigned char** iv) {
         } else curr_state->xor_with(ans.back());
         // AES part
         curr_state->xor_with(round_keys[0]);
-        for (int round = 0; round < 9; round++) curr_state->step_through(round_keys[round]);
+        for (int round = 1; round < 10; round++) curr_state->step_through(round_keys[round]);
         curr_state->step_through(round_keys[10], false);
 
         // save to vector `ans`
@@ -72,7 +72,7 @@ unsigned char* aes::encrypt(string& original_text, unsigned char** iv) {
     for (int i = 0; i < ans.size(); i++)
         for (int j = 0; j < 4; j++)
             for (int k = 0; k < 4; k++)
-                to_ret[16 * i + 4 * j + k] = ans[i]->bytes[j][k];
+                to_ret[16 * i + 4 * k + j] = ans[i]->bytes[j][k];
     return to_ret;
 }
 
@@ -83,8 +83,8 @@ string aes::decrypt(unsigned char* coded_text, unsigned long long len, unsigned 
 
         // AES decypher
         curr_state->xor_with(round_keys[10]);
-        for (int round = 9; round >= 0; round--) curr_state->step_back(round_keys[round]);
-        curr_state->step_through(round_keys[0], false);
+        for (int round = 9; round > 0; round--) curr_state->step_back(round_keys[round]);
+        curr_state->step_back(round_keys[0], false);
         // CBC overhead
         if (i == 0) {
             auto iv_block = new block(iv);
@@ -97,10 +97,12 @@ string aes::decrypt(unsigned char* coded_text, unsigned long long len, unsigned 
     }
 
     // decode to output format (string)
+    auto buffer = new unsigned char[len];
+    for (int i = 0; i < ans.size(); i++)
+        for (int j = 0; j < 4; j++)
+            for (int k = 0; k < 4; k++)
+                buffer[16 * i + 4 * k + j] = ans[i]->bytes[j][k];
     string to_ret;
-    for (auto & an : ans)
-        for (auto & byte : an->bytes)
-            for (unsigned char k : byte)
-                to_ret += char(k);
+    for (int i = 0; i < len; i++) to_ret += char(buffer[i]);
     return to_ret;
 }
