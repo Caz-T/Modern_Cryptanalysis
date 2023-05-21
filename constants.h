@@ -8,7 +8,7 @@
 // The o-th bit, LSB first
 #define getbit(u, o) (((u) >> (o)) & 0x1ull)
 #define setbit(u, o) ((u) = ((u) | (0x1ull << (o))))
-#define resetbit(u, o) ((u) = ((u) & (0x1ull << (o))))
+#define resetbit(u, o) ((u) = ((u) & ~(0x1ull << (o))))
 
 #define cycl(u, num) ((u) << (num) | (u) >> (64 - (num)))
 #define cycr(u, num) ((u) >> (num) | (u) << (64 - (num)))
@@ -26,17 +26,20 @@ const uint32_t MAX_INPUT_SIZE = 1073741823; // maximum input size: 125MB (1G bit
 
 // self-computed.
 /*
+#include <iostream>
+using namespace std;
 bool rc(uint64_t t) {
     if (t % 255 == 0) return true;
-    uint8_t r = 0x80;
+    uint8_t r = 1;
     for (uint64_t i = 0; i < t % 255; i++) {
-        uint8_t mask = r % 2;
-        r >>= 1;
-        r ^= (mask << 7);
-        r ^= (mask << 3);
-        r ^= (mask << 2);
-        r ^= (mask << 1);
+        uint8_t mask = r >> 7;
+        r <<= 1;
+        r ^= (mask << 0);
+        r ^= (mask << 4);
+        r ^= (mask << 5);
+        r ^= (mask << 6);
     }
+    r <<= 7;
     return r >> 7;
 }
 int main() {
@@ -50,6 +53,7 @@ int main() {
 }
  */
 const bool RC_LOOKUP[256] = {
+        true, false, false, false, false, false, false, false, true, false, true, true, false, false, false, true,
         true, true, true, false, true, false, false, false, false, true, true, true, true, true, true, true,
         true, false, false, true, false, false, false, false, true, false, true, false, false, true, true, true,
         true, true, false, true, false, true, false, true, false, true, true, true, false, false, false, false,
@@ -65,6 +69,6 @@ const bool RC_LOOKUP[256] = {
         false, false, false, false, false, true, false, false, true, true, true, false, true, true, false, false,
         true, false, false, true, false, false, true, true, false, false, false, false, false, false, true, true,
         true, false, true, false, false, true, false, false, false, true, true, true, false, false, false, true,
-        };
+};
 
 #endif //SHA256_CONSTANTS_H
