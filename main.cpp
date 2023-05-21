@@ -57,7 +57,7 @@ int main() {
 
         ofstream fo;
         fo.open("encrypt_result.txt");
-        for (auto i = 0; i < (1 + (unsigned long long)(len / 16)) * 16; i++) fo << hex << setfill('0') << setw(2) << (unsigned short)result[i] << ' ';
+        for (auto i = 0; i < ((unsigned long long)(len / 16)) * 16; i++) fo << hex << setfill('0') << setw(2) << (unsigned short)result[i] << ' ';
         fo.close();
     } else if (c == 'd') {
         ifstream fi;
