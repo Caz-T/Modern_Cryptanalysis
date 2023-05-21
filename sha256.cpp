@@ -55,11 +55,7 @@ void id_map(uint64_t* state) {
         // χ
         for (x = 0; x < 5; x++)
             for (y = 0; y < 5; y++)
-                for (z = 0; z < LANE_LEN; z++) {
-                    bool tmp = getbit(state[idx(x, y)], z) xor (not getbit(state[idx((x + 1) % 5, y)], z) and getbit(state[idx((x + 2) % 5, y)], z));
-                    if (tmp) setbit(prime[idx(x, y)], z);
-                    else resetbit(prime[idx(x, y)], z);
-                }
+                prime[idx(x, y)] = state[idx(x, y)] ^ (~state[idx((x + 1) % 5, y)] & state[idx((x + 2) % 5, y)]);
         for (x = 0; x < 5; x++)
             for (y = 0; y < 5; y++)
                 state[idx(x, y)] = prime[idx(x, y)];
